@@ -69,6 +69,7 @@ async fn main() -> Result<()> {
     // Setup and launch Prometheus exporter
     debug!("setting up prometheus exporter");
     PrometheusBuilder::new()
+        .with_http_listener("0.0.0.0:8080".parse::<SocketAddr>().unwrap())
         .set_buckets_for_metric(
             Matcher::Full("clomonitor_apiserver_http_request_duration".to_string()),
             &[

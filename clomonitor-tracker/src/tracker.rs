@@ -51,11 +51,15 @@ pub(crate) async fn run(cfg: &Config, db: DynDB, git: DynGit, linter: DynLinter)
         info!("no repositories found, finished");
         return Ok(());
     }
+    let open_telemetry_repositories: Vec<Repository> = repositories
+        .into_iter()
+        .filter(|repo| repo.project.name == "open-telemetry")
+        .collect();
 
     // Track repositories
     info!("tracking repositories");
     #[allow(clippy::manual_try_fold)]
-    let result = stream::iter(repositories)
+    let result = stream::iter(open_telemetry_repositories)
         .map(|repository| async {
             let db = db.clone();
             let git = git.clone();
